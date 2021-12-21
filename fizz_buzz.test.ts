@@ -1,4 +1,5 @@
-import { convert, sequence } from './fizz_buzz';
+import * as color from './color';
+import { convert, sequence, decorate } from './fizz_buzz';
 
 describe('convert', () => {
     describe('should return orginal input when number cann\'t be divisible by three or five', () => {
@@ -98,21 +99,61 @@ describe('sequence', () => {
     test('should print a sequence', () => {
         sequence(15);
         expect(logMock.mock.calls.map(a => a[0])).toMatchObject([
-            1,
-            2,
-            'Fizz',
-            4,
-            'Buzz',
-            'Fizz',
-            7,
-            8,
-            'Fizz',
-            'Buzz',
-            11,
-            'Fizz',
-            'Fizz',
-            14,
-            'FizzBuzz',
+            '\x1b[0;31m1\x1b[0m',
+            '\x1b[0;34m2\x1b[0m',
+            '\x1b[0;31mFizz\x1b[0m',
+            '\x1b[0;34m4\x1b[0m',
+            '\x1b[0;31mBuzz\x1b[0m',
+            '\x1b[0;34mFizz\x1b[0m',
+            '\x1b[0;31m7\x1b[0m',
+            '\x1b[0;34m8\x1b[0m',
+            '\x1b[0;31mFizz\x1b[0m',
+            '\x1b[0;34mBuzz\x1b[0m',
+            '\x1b[0;31m11\x1b[0m',
+            '\x1b[0;34mFizz\x1b[0m',
+            '\x1b[0;31mFizz\x1b[0m',
+            '\x1b[0;34m14\x1b[0m',
+            '\x1b[0;31mFizzBuzz\x1b[0m',
         ]);
+    });
+});
+
+describe('decorate', () => {
+    describe('should make output red if it\'s an odd number', () => {
+        const addColorMock = jest.spyOn(color, 'add');
+        beforeEach(() => {
+            addColorMock.mockClear();
+        });
+
+        afterEach(() => {
+            addColorMock.mockClear();
+        });
+
+        [1, 3, -1, -5, 15].forEach(ordinal => {
+            test(String(ordinal), () => {
+                decorate(ordinal);
+                expect(addColorMock.mock.calls).toHaveLength(1);
+                expect(addColorMock.mock.calls[0][1]).toBe('red');
+            });
+        });
+    });
+
+    describe('should make output blue if it\'s an even number', () => {
+        const addColorMock = jest.spyOn(color, 'add');
+        beforeEach(() => {
+            addColorMock.mockClear();
+        });
+
+        afterEach(() => {
+            addColorMock.mockClear();
+        });
+
+        [2, 4, 0, -6, 14].forEach(ordinal => {
+            test(String(ordinal), () => {
+                decorate(ordinal);
+                expect(addColorMock.mock.calls).toHaveLength(1);
+                expect(addColorMock.mock.calls[0][1]).toBe('blue');
+            });
+        });
     });
 });

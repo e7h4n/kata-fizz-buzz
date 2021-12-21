@@ -1,4 +1,6 @@
-export function convert(ordinal: number) {
+import { add } from './color';
+
+export function convert(ordinal: number): string | number {
     if (!Number.isInteger(ordinal)) {
         return ordinal;
     }
@@ -19,8 +21,13 @@ export function convert(ordinal: number) {
 
 export function sequence(length: number) {
     for (let i = 0; i < length; i++) {
-        console.log(convert(i + 1));
+        console.log(decorate(i + 1));
     }
+}
+
+export function decorate(ordinal: number): string {
+    const target: string | number = convert(ordinal);
+    return ordinal % 2 === 0 ? add(target, 'blue') : add(target, 'red');
 }
 
 if (require.main === module) {
